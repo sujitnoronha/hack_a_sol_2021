@@ -1,0 +1,242 @@
+{% extends 'bizown/baseblank.html' %} {% load static %} {% block content %}
+<div class="w3-content" style="max-width:700px;">
+    <div class="w3-container">
+        
+
+        <form class="w3-form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="w3-section ">
+                <label class="w3-small">Business Name</label>
+                <br>
+                <div><input type="text" name="BusinessName" class="w3-input" maxlength="100" required id="id_BusinessName"></div>
+            </div>
+           
+            </div>
+            <div class="w3-section ">
+                <label class="w3-small">Phonenumber</label>
+                <br>
+                    <input id="phone" name="phonenumber" oninput="intphone()" style="max-width:700px;border: 1px solid #ccc;" type="tel" required>
+                    <span id="valid-msg" class="hide">✓ Valid</span>
+                    <span class="w3-small" id="error-msg" class="hide"></span>
+            </div>
+             
+            <div class="w3-section">
+                <label class="w3-small">Location</label>
+                <br>
+                <div id="map" class="map"></div>
+                <p id="info" class="info"></p>
+                <label class="w3-small">Address</label>
+                <input class="w3-input" name="address" id="address" type="text" style="max-width:600px;" /><br/>
+                <input type="hidden" name="latitude" id="latitude" placeholder="Latitude" />
+                <input type="hidden" name="longitude" id="longitude" placeholder="Longitude" />
+            </div>
+            
+            <input type="submit" class="w3-button w3-blue w3-round w3-margin-bottom"> <br>
+        </form>
+
+    </div>
+</div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src="{% static 'bizown/script.js'%} "></script>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js " integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin=" anonymous "></script>
+</script>
+<script type="text/javascript ">
+    /**
+     * Create google maps Map instance.
+     * @param {number} lat
+     * @param {number} lng
+     * @return {Object}
+     */
+    const createMap = ({
+        lat,
+        lng
+    }) => {
+        return new google.maps.Map(document.getElementById('map'), {
+            center: {
+                lat,
+                lng
+            },
+            zoom: 15
+        });
+    };
+
+    /**
+     * Create google maps Marker instance.
+     * @param {Object} map
+     * @param {Object} position
+     * @return {Object}
+     */
+    const createMarker = ({
+        map,
+        position
+    }) => {
+        return new google.maps.Marker({
+            map,
+            position,
+            draggable: true,
+        });
+    };
+
+    /**
+     * Track the user location.
+     * @param {Object} onSuccess
+     * @param {Object} [onError]
+     * @return {number}
+     */
+    const trackLocation = ({
+        onSuccess,
+        onError = () => {}
+    }) => {
+        if ('geolocation' in navigator === false) {
+            return onError(new Error('Geolocation is not supported by your browser.'));
+        }
+
+        return navigator.geolocation.watchPosition(onSuccess, onError, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        });
+    };
+
+    /**
+     * Get position error message from the given error code.
+     * @param {number} code
+     * @return {String}
+     */
+    const getPositionErrorMessage = code => {
+        switch (code) {
+            case 1:
+                return 'Permission denied.';
+            case 2:
+                return 'Position unavailable.';
+            case 3:
+                return 'Timeout reached.';
+        }
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+  infoWindow.setPosition(pos);
+  infoWindow.setContent(
+    browserHasGeolocation
+      ? "Error: The Geolocation service failed."
+      : "Error: Your browser doesn't support geolocation."
+  );
+  infoWindow.open(map);
+}
+
+    /**
+     * Initialize the application.
+     * Automatically called by the google maps API once it's loaded.
+     */
+    function init() {
+        const initialPosition = {
+            lat: 59.32,
+            lng: 17.84
+        };
+        const map = createMap(initialPosition);
+        const marker = createMarker({
+            map,
+            position: initialPosition,
+        });
+        const $info = document.getElementById('info');
+        var geocoder = new google.maps.Geocoder();
+
+        
+        const locationButton = document.createElement("button");
+        locationButton.type = "button";
+        locationButton.textContent = "Move to Current Location";
+        locationButton.classList.add("custom-map-control-button");
+        map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(locationButton);
+
+            locationButton.addEventListener("click", () => {
+                    // Try HTML5 geolocation.
+                    var options = {
+                        enableHighAccuracy: true,
+                            maximumAge: 0,
+                            };
+
+                        function success(pos) {
+                        var crd = pos.coords;
+                        const posi = {
+                            lat: crd.latitude,
+                            lng: crd.longitude,
+                        };
+                        console.log(posi);
+                        map.setCenter(posi);
+                        marker.setPosition(posi);
+                        }
+
+                        function error(err) {
+                        console.log(`ERROR(${err.code}): ${err.message}`);
+                        }
+                    if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        success, error, options
+                    );
+                    } else {
+                    // Browser doesn't support Geolocation
+                    console.log('not working');
+                    handleLocationError(false, $info, map.getCenter());
+                    }
+                });
+        
+        let watchId = trackLocation({
+            onSuccess: ({
+                coords: {
+                    latitude: lat,
+                    longitude: lng
+                }
+            }) => {
+                marker.setPosition({
+                    lat,
+                    lng
+                });
+                map.panTo({
+                    lat,
+                    lng
+                });
+                geocoder.geocode({
+                    'latLng': marker.getPosition()
+                }, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                            $('#latitude,#longitude').show();
+                            $('#address').val(results[0].formatted_address);
+                            $('#latitude').val(marker.getPosition().lat());
+                            $('#longitude').val(marker.getPosition().lng());
+                        }
+                    }
+                });
+                $info.classList.remove('error');
+            },
+            onError: err => {
+                console.log($info);
+                $info.textContent = `Error: ${err.message || getPositionErrorMessage(err.code)}`;
+                $info.classList.add('error');
+            }
+        });
+
+        google.maps.event.addListener(marker, 'dragend', function() {
+
+            geocoder.geocode({
+                'latLng': marker.getPosition()
+            }, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[0]) {
+                        $('#address').val(results[0].formatted_address);
+                        $('#latitude').val(marker.getPosition().lat());
+                        $('#longitude').val(marker.getPosition().lng());
+                        map.panTo(marker.getPosition());
+                    }
+                }
+            });
+        });
+
+
+
+    }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYUeS2YnGYNzt9kZRc1p-4tt4IyEacsjY&callback=init "></script>
+{% endblock %}
