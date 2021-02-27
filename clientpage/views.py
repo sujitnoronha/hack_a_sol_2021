@@ -49,7 +49,7 @@ def locations(request,*args,**kwargs):
         li = {}
         drivedata = DonationDrives.objects.get(name=s_d[i][0])
         serializer = DriveSerializer(drivedata, many=False)
-        li.update({"driveinfo": serializer.data, "distance": s_d[i]})
+        li.update({"driveinfo": serializer.data, "distance": s_d[i][1]})
         context.append(li)
 
     return Response({"message":"success", "data": context})

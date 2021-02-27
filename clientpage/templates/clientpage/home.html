@@ -13,10 +13,10 @@
       // Initialize and add the map
       function initMap() {
         // The location of Uluru
-        const uluru = { lat: -25.344, lng: 131.036 };
+        const uluru = { lat: 19.187229, lng: 72.840747 };
         // The map, centered at Uluru
         const map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 4,
+          zoom: 14,
           center: uluru,
         });
         // The marker, positioned at Uluru
@@ -24,13 +24,36 @@
           position: uluru,
           map: map,
         });
+
+        {% for e in drives %}
+            const contentString{{ forloop.counter }} =
+    '<div id="w3-card-4 w3-container w3-padding w3-round-large">' +
+    '<p class="w3-large " style="font-weight:bold;">{{ e.name }}</p>'+
+    '<p class="w3-small">{{ e.address }}</p>'
+    
+    "</div>";
+             const infowindow{{ forloop.counter }} = new google.maps.InfoWindow({
+                    content: contentString{{ forloop.counter }},
+                });
+
+
+            const marker{{ forloop.counter }} = new google.maps.Marker({
+                position: { lat:{{ e.latitude|safe }}, lng: {{ e.longitude|safe }}},
+                map: map,
+                title: "{{e.name}}",
+            });
+            marker{{forloop.counter}}.addListener("click", () => {
+        infowindow{{forloop.counter}}.open(map, marker{{forloop.counter}});
+  });
+        {% endfor %}
+
       }
 
 </script>
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
   <div class="w3-container w3-row">
     <div class="w3-col s4">
-      <img src="/w3images/avatar2.png" class="w3-circle w3-margin-right" style="width:46px">
+      <img src="" class="w3-circle w3-margin-right" style="width:46px">
     </div>
     <div class="w3-col s8 w3-bar">
       <span>Welcome, <strong>Mike</strong></span><br>
@@ -58,9 +81,6 @@
 </nav>
 
 
-<!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
-
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:300px;margin-top:43px;">
 <div class="w3-panel w3-padding-32">
@@ -69,76 +89,46 @@
         <h5>Donation Centers</h5>
         <div id="map"></div>
       </div>
-      <div class="w3-half">
+      <div class="w3-half" id="vueapp">
+        <div>
         <h5>Near You</h5>
-        <table class="w3-table w3-card-4 w3-round-large w3-white" style="margin-right:12px;">
-          <tr>
-            <td><i class="fa fa-user w3-large"></i></td>
-            <td>New record, over 90 views.</td>
-            <td><i>10 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-bell w3-large"></i></td>
-            <td>Database error.</td>
-            <td><i>15 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-users w3-large"></i></td>
-            <td>New record, over 40 users.</td>
-            <td><i>17 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-comment  w3-large"></i></td>
-            <td>New comments.</td>
-            <td><i>25 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-bookmark w3-large"></i></td>
-            <td>Check transactions.</td>
-            <td><i>28 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-laptop  w3-large"></i></td>
-            <td>CPU overload.</td>
-            <td><i>35 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-laptop  w3-large"></i></td>
-            <td>CPU overload.</td>
-            <td><i>35 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-laptop  w3-large"></i></td>
-            <td>CPU overload.</td>
-            <td><i>35 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-laptop  w3-large"></i></td>
-            <td>CPU overload.</td>
-            <td><i>35 mins</i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-share-alt w3-large"></i></td>
-            <td>New shares.</td>
-            <td><i>39 mins</i></td>
-          </tr>
+        <table class="w3-table w3-card-4 w3-round-large w3-white"  style="margin-right:12px;">
+          <div v-if="details">
+            <div v-for="inf in info">
+                <tr>
+                    <td><i class="fa fa-user w3-large"></i></td>
+                    <td>[[ inf.driveinfo.name ]]</td>
+                    <td><i>[[ inf.distance ]] kms</i></td>
+                </tr>
+            </div>
+                </div>
+          <div v-else>
+            
+            <p> Enable geolocation to get details</p>
+
+          </div>
         </table>
+        </div>
       </div>
     </div>
   </div>
   
 
     <div class="w3-container w3-padding-16">
+    <h1 class="w3-large">All Donation Drives</h1>
     {% for d in drives %}
-    <div class="w3-card-4 w3-round-large">
+    <div class="w3-card-4 w3-round-large w3-padding-16">
         <div class="w3-row-padding">
             <div class="w3-third w3-center" style="text-align:left;">
                 <img class="w3-image w3-circle w3-responsive" style="width:200px; height:200px;margin:auto;" src="{{ d.image.url }}">
             </div>
             <div class="w3-twothird">
+            <div class="w3-container">
             <p class="w3-large">{{ d.name }}</p>
+            <p class='w3-small'>{{ d.description| truncatechars:140}}</p>
             <p>{{ d.address }}</p>
-            <a href="{{ d.get_absolute_url }}" class="w3-button w3-grey">Visit {{d.name }}</a>
+            <a href="{{ d.get_absolute_url }}" class="w3-button w3-grey">Visit {{ d.name }}</a>
+            </div>
             </div>
         </div>
     </div>
@@ -148,11 +138,86 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous"></script>
 
+<script>
+
+var app = new Vue({
+  delimiters: ["[[", "]]"],
+  el: '#vueapp',
+    data: {
+        info: [],
+        details: false,
+  },
+    mounted() {
+            if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                };
+    
+                console.log(pos)
+                axios.post('locations/',
+                {"latitude": pos.lat, "longitude": pos.lng},
+                {
+                headers: {
+                    'X-CSRFTOKEN': csrftoken,
+                },
+                }
+                ).then(res => {
+                    console.log(res.data)
+
+                    this.details = true;
+
+                    this.info = res.data.data;
+                    console.log('complete')
+                })
+                }
+
+
+            )
+            }else {
+                alert('Browser does not support geolocation')
+            }
+        },
+   methods: {
+            
+
+                },
+    template:
+        `<div class="w3-half">
+    
+            <h5>Near You</h5>
+        <table class="w3-container w3-round-large w3-white"  style="margin-right:12px;">
+          <div v-if="details">
+            <div v-for="inf in info">
+                <div class="w3-container w3-card-4 w3-round-large w3-block" style="width:100%;">
+
+                    <p>[[ inf.driveinfo.name ]]</p>
+                    <p>[[ inf.driveinfo.address ]]</p>
+                    <p class="w3-large w3-tag w3-red"><i>[[ inf.distance ]] kms</i></p>
+                                        <a class="w3-button w3-grey">Visit</a>
+
+                </div>
+            </div>
+                </div>
+          <div v-else>
+            
+            <p> Enable geolocation to get details</p>
+
+          </div>
+        </table>
+        </div>`
+         
+})
+
+</script>
 
 <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYUeS2YnGYNzt9kZRc1p-4tt4IyEacsjY&callback=initMap&libraries=&v=weekly"
       async
     ></script>
-
 {% endblock %}
