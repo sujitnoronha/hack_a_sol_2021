@@ -1,0 +1,65 @@
+{% extends "clientpage/base.html" %} {% load i18n %} {% load account socialaccount %} {% block head_title %}{% trans "Sign In" %}{% endblock %} {% block content %} {% load socialaccount %} {% providers_media_js %}
+
+<div class="w3-container w3-grey" style="padding:120px 20px;">
+    <div class="w3-row">
+        <div class="w3-col l7 m8 s12 w3-padding-32 w3-hide-small">
+            <div class="w3-container" style="max-width:400px;margin:32px auto;text-align: left;">
+                <h1 class="w3-xxlarge w3-text-white" style="font-weight:bolder;">DONT MISS YOUR NEXT OPPORTUNITY. SIGN IN TO STAY UPDATED!</h1>
+
+            </div>
+        </div>
+        <div class="w3-col l5 m4 s12 w3-left w3-padding-24">
+
+            <div class="w3-card-4 w3-white w3-margin w3-round-large" style="max-width:400px;">
+                <div class="w3-container w3-margin w3-padding-16">
+                    <h1>{% trans "Sign In" %}</h1>
+
+                    <form class="login w3-form" method="POST" action="{% url 'account_login' %}">
+                        {% csrf_token %}
+                        <p> <input class="w3-input w3-border w3-round-large" type="text" name="login" placeholder="Username or e-mail" autocomplete="email" required id="id_login"></p>
+
+                        <p>
+                            <input class="w3-input w3-border w3-round-large" type="password" name="password" placeholder="Password" autocomplete="current-password " required id="id_password "></p>
+                        {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" /> {% endif %}
+                        <p style="text-align:center;">
+                            <a class="button secondaryAction w3-small" href="{% url 'account_reset_password' %}">{% trans "Forgot Password? " %}</a> &nbsp;
+                            <button class="primaryAction w3-button w3-blue w3-hover-blue w3-round-large" type="submit">{% trans "Sign In " %}</button>
+                        </p>
+                    </form>
+
+                    <div class="login-or w3-small" style="text-align: center;font-size: 30px;margin:10px 0px; font-weight:bold;">{% trans 'OR' %}</div>
+                    {% get_providers as socialaccount_providers %} {% if socialaccount_providers %}
+
+                    <div class="socialaccount_ballot w3-margin">
+
+                        <div class="socialaccount_providers">
+
+
+
+
+
+                           
+
+
+                            <button class="w3-button w3-block w3-text-white w3-round-large w3-hover-red" style="background-color: #dd4b39;text-align: center;margin-bottom:20px;">
+                <a title="Google" style="text-decoration: none;" class="socialaccount_provider google" href="/accounts/google/login/?process=login"><i class="fa fa-google"></i> Continue with Google</a>
+            </button>
+
+
+                        </div>
+                        <p class="w3-small">If you have not created an account yet, then please
+                            <a class="w3-text-blue" style="text-decoration: underline;" href="{% url 'account_signup' %}">sign up</a></p>
+                    </div>
+
+                    {% include "socialaccount/snippets/login_extra.html" %} {% else %}
+                    <p>{% blocktrans %}If you have not created an account yet, then please
+                        <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+                    {% endif %}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>{% endblock %}

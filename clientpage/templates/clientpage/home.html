@@ -1,5 +1,6 @@
 {% extends 'clientpage/base.html' %}
 {% block content %}
+
 <style type="text/css">
       /* Set the size of the div element that contains the map */
       #map {
@@ -8,6 +9,26 @@
         width: 100%;
         /* The width is the width of the web page */
       }
+
+      /* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
     </style>
 <script>
       // Initialize and add the map
@@ -69,14 +90,9 @@
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
     <a href="#" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-users fa-fw"></i>  Overview</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Views</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Traffic</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Geo</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-diamond fa-fw"></i>  Orders</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i>  News</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bank fa-fw"></i>  General</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-history fa-fw"></i>  History</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br>
+    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-map-marker fa-fw"></i>  All Donation Drives</a>
+    
+    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Overview</a>
   </div>
 </nav>
 
@@ -131,7 +147,7 @@
             </div>
             </div>
         </div>
-    </div>
+    </div><br>
     {% endfor %}
     </div>
 
@@ -191,8 +207,9 @@ var app = new Vue({
         `<div class="w3-half">
     
             <h5>Near You</h5>
-        <table class="w3-container w3-round-large w3-white"  style="margin-right:12px;">
+        <div class="w3-container w3-round-large w3-white" style="margin-right:12px;overflow-y:scroll;max-height:400px;">
           <div v-if="details">
+            <br>
             <div v-for="inf in info">
                 <div class="w3-container w3-card-4 w3-round-large w3-block" style="width:100%;">
 
@@ -201,7 +218,7 @@ var app = new Vue({
                     <p class="w3-large w3-tag w3-red"><i>[[ inf.distance ]] kms</i></p>
                                         <a class="w3-button w3-grey">Visit</a>
 
-                </div>
+                </div><br>
             </div>
                 </div>
           <div v-else>
@@ -209,13 +226,25 @@ var app = new Vue({
             <p> Enable geolocation to get details</p>
 
           </div>
-        </table>
+        </div>
         </div>`
          
 })
 
 </script>
-
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/603a6649385de407571aba50/1evi1v4g8';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
 <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYUeS2YnGYNzt9kZRc1p-4tt4IyEacsjY&callback=initMap&libraries=&v=weekly"
       async

@@ -7,13 +7,15 @@ from django.shortcuts import reverse
 class DonationDrives(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True, null=True)
+    phonenumber = models.CharField(max_length=20, blank=True, null=True)
     image = models.ImageField(blank=False, null=True, upload_to="donationprofiles")
     latitude = models.DecimalField(max_digits=22, decimal_places=16, blank=True, null=True)
     longitude = models.DecimalField(max_digits=22, decimal_places=16, blank=True, null=True)
-    timeopen = models.TimeField(auto_now=False)
-    timeclose = models.TimeField(auto_now=False)
+    timeopen = models.TimeField(auto_now=False,null=True, blank=True)
+    timeclose = models.TimeField(auto_now=False, null=True,blank=True)
     address = models.CharField(max_length=300, blank=True, null=True)
     description = models.CharField(max_length=300, blank=True, null=True)
+    verified = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.name)

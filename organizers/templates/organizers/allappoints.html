@@ -1,0 +1,7 @@
+{% extends 'clientpage/base.html' %}
+
+{% block content %}
+    {% for a in appointments %}
+        <p>{{ a.name }}</p>
+    {% endfor %}
+{% endblock %}

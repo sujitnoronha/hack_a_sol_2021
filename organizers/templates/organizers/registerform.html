@@ -1,0 +1,40 @@
+{% extends 'clientpage/base.html' %}
+{% block content %}
+    <div class="w3-content w3-padding-32" style="max-width:700px;margin-top:64px;">
+        <h1 class="w3-xlarge">Complete the application to register your Donation Drive </h1>
+        <p class='w3-small'>Will be verified in a day or two.</p>
+        <form class="w3-form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input class="w3-input" placeholder="Name of Blood donation drive" type="text" name="name"><br>
+        
+        <input class="w3-input" placeholder="Phonenumber" type="text" name="phonenumber"><br>
+        <div class="w3-section">
+         <label for="img">Select image:</label>
+          <input type="file" id="img" name="image" accept="image/*">
+        </div>
+        <input class="w3-input" type="text" placeholder="address" ><br>
+        <input class="w3-input" type="text" placeholder="Description"><br>
+        <input class="w3-hide" type="number" name="latitude" id="lat" step=any />
+        <input class="w3-hide" type="number" name="longitude" id="lng" step=any />
+        <input type="submit" class="w3-button w3-grey">
+
+        </form>
+    </div>
+
+    <script>
+        if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                };
+                document.getElementById('lat').value = pos.lat;
+                document.getElementById('lng').value = pos.lng;
+            });
+
+        }else{
+            alert('geolocation not supported')
+        }
+    </script>
+{% endblock %}

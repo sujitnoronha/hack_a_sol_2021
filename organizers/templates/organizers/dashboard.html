@@ -1,4 +1,4 @@
-{% extends 'clientpage/base.html' %}
+{% extends 'clientpage/base.html' %}    
 {% block content %}
 <style>
 .parallax{
@@ -21,11 +21,17 @@
     
     </div>
         <div class="w3-container w3-padding-32" style="margin:auto;max-width:800px;">
+        {% if drive.verified %}
+
+        {% else %}
+        <p class="w3-xlarge w3-text-red">Account is not verified. contact support@staysafe.com for any queries</p>
+        {% endif %}
+        <p></p>
         <p class='w3-large'>{{ drive.description }}</p>
         
-            <a href="{% url 'liveenquiry' id=drive.id %}" class='w3-button w3-grey w3-bar-item w3-block'>Urgent Enquiry</a>
+            <a href="{% url 'liveenquiry' id=drive.id %}" class='w3-button w3-grey w3-bar-item w3-block'>Urgent Enquiry Video Call</a>
             <br>
-            <a href="{% url 'appointment' id=drive.id  %}" class='w3-button w3-grey w3-bar-item w3-block'>Schedule Appointment</a>
+            <a href="{% url 'organ-appointment' id=drive.id  %}" class='w3-button w3-grey w3-bar-item w3-block'>View Appointments</a>
 
     </div>
 
@@ -35,17 +41,4 @@
     
     </div>
 
-<script>
-  window.watsonAssistantChatOptions = {
-      integrationID: "4c29dd04-0a2f-44a5-9ee0-d0c137bfb581", // The ID of this integration.
-      region: "au-syd", // The region your integration is hosted in.
-      serviceInstanceID: "2c72cd20-35be-4c28-99a3-9e666abe13fd", // The ID of your service instance.
-      onLoad: function(instance) { instance.render(); }
-    };
-  setTimeout(function(){
-    const t=document.createElement('script');
-    t.src="https://web-chat.global.assistant.watson.appdomain.cloud/loadWatsonAssistantChat.js";
-    document.head.appendChild(t);
-  });
-</script>
 {% endblock %}

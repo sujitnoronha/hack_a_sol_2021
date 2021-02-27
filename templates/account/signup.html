@@ -1,0 +1,53 @@
+{% extends "clientpage/base.html" %} {% load i18n %} {% load account socialaccount %} {% block head_title %}{% trans "Signup" %}{% endblock %} {% block content %}
+<div class="w3-display-container w3-grey" style="margin-top:100px;"> 
+    <div class="w3-row-padding">
+        <div class="w3-col l6 m6 s12 w3-hide-small w3-hide-medium" style="margin-top:32px;">
+            <div class="w3-container " style="width:300px;margin: auto;">
+                 </div>
+        </div>
+        <div class="w3-col l6 m6 s12 w3-right" style="margin:auto;">
+            <div class="w3-card-4 w3-white w3-margin w3-round-large w3-padding-16" style="max-width:400px;">
+                <div class="w3-container w3-margin w3-padding-top">
+                    <h1>{% trans " Sign Up" %}</h1>
+
+                    <p class="w3-tiny">{% blocktrans %}Already have an account? <a href="{{ login_url }}">Sign in</a>.{% endblocktrans %}</p>
+
+                    <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+                        {% csrf_token %}
+                        <p><input type="email" class="w3-input w3-border w3-round-large " name="email" placeholder="E-mail address" autocomplete="email" required id="id_email"></p>
+                        <p><input type="text" class="w3-input w3-border w3-round-large " name="username" placeholder="Username" autocomplete="username" minlength="1" maxlength="150" required id="id_username"></p>
+                        <p><input type="password" class="w3-input w3-border w3-round-large " name="password1" placeholder="Password" autocomplete="new-password" required id="id_password1"></p>
+                        <p><input type="password" class="w3-input w3-border w3-round-large " name="password2" placeholder="Password (again)" required id="id_password2"></p> {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" /> {% endif %}
+                        <button style="text-align: center;" class="w3-center w3-round-large w3-button w3-border w3-hover-blue" type="submit">{% trans "Sign Up " %} &raquo;</button>
+                    </form>
+                </div>
+                <div class="login-or w3-small " style="text-align: center;font-size: 30px;margin:10px 0px; font-weight:bold; ">{% trans 'OR' %}</div>
+                {% get_providers as socialaccount_providers %} {% if socialaccount_providers %}
+
+                <div class="socialaccount_ballot w3-margin w3-center">
+
+                    <div class="socialaccount_providers ">
+
+
+
+
+
+
+                        <button class="w3-button w3-text-white w3-round-large w3-hover-red w3-block" style="background-color: #dd4b39;text-align: center;margin-bottom:20px; ">
+            <a title="Google " style="text-decoration: none; " class="socialaccount_provider google " href="/accounts/google/login/?process=login "><i class="fa fa-google "></i> Continue with Google</a>
+        </button>
+
+
+                    </div>
+
+                </div>
+
+                {% include "socialaccount/snippets/login_extra.html" %} {% else %}
+                
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div> {% endblock %}

@@ -32,15 +32,29 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'clientpage',
+    'organizers',
      'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
+
+SITE_ID = 1
+
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED =True
+ACCOUNT_EMAIL_VERIFICATION = 'none' 
+ACCOUNT_DEFAULT_HTTP_PROTOCOL='https'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,7 +71,7 @@ ROOT_URLCONF = 'hackasol.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,6 +139,14 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+LOGIN_URL = '/accounts/login/'
+
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS =True
+
+LOGIN_REDIRECT_URL = 'dashboard'
+
+LOGOUT_REDIRECT_URL = 'home'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
