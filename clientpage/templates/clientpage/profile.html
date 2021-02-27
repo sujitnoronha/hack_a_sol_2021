@@ -1,0 +1,38 @@
+{% extends 'clientpage/base.html' %}
+{% block content %}
+<style>
+.parallax{
+    background-image: url("{{ drive.image.url }}");
+    
+  min-height: 400px; 
+    background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+</style>
+
+   <div class="w3-display-container parallax">
+    <div class="w3-display-middle" style="background: rgba(255,255,255,0.8);">
+        <div class="w3-container">
+        <h1 class="w3-xlarge">{{ drive.name|upper}}</h1>
+        </div>
+    </div>
+    
+    </div>
+        <div class="w3-container w3-padding-32" style="margin:auto;max-width:800px;">
+        <p class='w3-large'>{{ drive.description }}</p>
+        
+            <a href="{% url 'liveenquiry' id=drive.id %}" class='w3-button w3-grey w3-bar-item w3-block'>Urgent Enquiry</a>
+            <br>
+            <a href="{% url 'appointment' id=drive.id  %}" class='w3-button w3-grey w3-bar-item w3-block'>Schedule Appointment</a>
+
+    </div>
+
+    <div class="w3-container w3-grey w3-padding-32">
+            <p class="w3-large"><i class="fa fa-clock-o"></i> {{ drive.timeopen }} to {{ drive.timeclose}} </p>
+            <p class="w3-large"><i class="fa fa-map-marker"></i> {{ drive.address }} </p>
+    
+    </div>
+
+{% endblock %}
