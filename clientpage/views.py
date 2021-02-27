@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import api_view
 from clientpage.models import *
 from rest_framework.renderers import JSONRenderer
@@ -8,14 +8,23 @@ from rest_framework.response import Response
 from clientpage.serializers import DriveSerializer
 from clientpage.forms import * 
 from django.contrib import messages
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 from geopy.distance import geodesic
 
+from webpush import send_user_notification
+
 # Create your views here.
 def home(request):
+    webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
+    vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
+    user = request.user
     drive = DonationDrives.objects.all()
     context = {
         'drives': drive,
+        user: user,
+        'vapid_key': vapid_key
     }
     return render(request,'clientpage/home.html',context)
 
@@ -32,17 +41,28 @@ def drivedonation(request, id):
 
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
+@csrf_exempt
 def locations(request,*args,**kwargs):
-    print(request.data)
     lat = request.data['latitude']
     long = request.data['longitude']
+    user_id = request.data['id']
+    user = get_object_or_404(User, pk=user_id)
     print(lat,long)
     origin = (lat,long)
     distance = {}
     for m in DonationDrives.objects.all():
         dest = (m.latitude, m.longitude)
-        print(dest)
+        # CAN ADD THE FOLLOWS:
+        # if round(geodesic(origin, dest).kilometers, 2) < 5:
+        # adding this condition will shortlist only those hospitals which are within a 5 kms
         distance[m.name] = round(geodesic(origin, dest).kilometers, 2)
+        # send notification starts from here
+        head_data = m.name
+        body_data = m.name + " is now available " + str(distance[m.name]) + " kms away from you"
+        payload = {'head': head_data, 'body': body_data}
+        send_user_notification(user=user, payload=payload, ttl=1000)
+        # ends here
+
     s_d = sorted(distance.items(), key=lambda x: x[1]) 
     context = []
     for i in range(len(s_d)):

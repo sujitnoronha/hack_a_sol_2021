@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'webpush'  # => new app added
 ]
 
 SITE_ID = 1
@@ -123,6 +124,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": "BAiycN_PJcAJdoTAcjKILpYNYNsVjJEeiX4pdRuBLbrNgiLLcd2gHxRplqEcLCWb90DXXdXFa0L8saFIaX42yjw",
+    "VAPID_PRIVATE_KEY": "h7isiUQivADDfSfZPgajYTf_A2JDRiDu-oCzM4pj1iA",
+    "VAPID_ADMIN_EMAIL": "frankypin@gmail.com"
+}
 
 CRISPY_TEMPLATE_PACK = 'uni_form'
 
