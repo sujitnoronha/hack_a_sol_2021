@@ -1,0 +1,15 @@
+<!-- {% extends 'clientpage/base.html' %}
+{% block content %}
+{% endblock %} -->
+<html>
+    <head></head>
+    <body>
+        <h1>hello</h1>
+
+        <form name="coviddetect" action="/covidapi" role="form" method="POST">
+            <label for="exampleFormControlFile1">Upload X-ray Image</label>
+            <input type="file" name="pic" id="exampleFormControlFile1" accept="image/*" required/>
+        </form>
+    </body>
+
+</html>

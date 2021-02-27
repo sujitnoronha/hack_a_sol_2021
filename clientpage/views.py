@@ -54,6 +54,10 @@ def locations(request,*args,**kwargs):
 
     return Response({"message":"success", "data": context})
 
+# @api_view(['GET'])
+def covidposneg(request):
+    return render(request,'clientpage/covidposneg.html')
+
 
 
 def enquiryview(request,id):

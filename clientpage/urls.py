@@ -8,6 +8,7 @@ urlpatterns = [
     path('<int:id>/', drivedonation, name="profile"),
     path('<int:id>/enquiry/', enquiryview, name="liveenquiry"),
     path('<int:id>/appoint/', appointmentview, name="appointment"),
+    path('covid_detect/', covidposneg)
     
     
     
