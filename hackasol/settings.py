@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'clientpage',
     'organizers',
      'crispy_forms',
+     'pwa',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
@@ -67,6 +68,43 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'hackasol.urls'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+PWA_APP_NAME = 'StaySafe Health'
+PWA_APP_DESCRIPTION = "This solution makes the whole processes of blood donation hassle free for donors and organizers"
+
+PWA_APP_THEME_COLOR = '#0A0302'
+PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'any'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_ICONS = [
+    {
+        'src': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/SF_Cinema_logo.jpg/600px-SF_Cinema_logo.jpg',
+        'sizes': '160x160'
+    }
+]
+PWA_APP_ICONS_APPLE = [
+    {
+        'src': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/SF_Cinema_logo.jpg/600px-SF_Cinema_logo.jpg',
+        'sizes': '160x160'
+    }
+]
+PWA_APP_SPLASH_SCREEN = [
+    {
+        'src': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/SF_Cinema_logo.jpg/600px-SF_Cinema_logo.jpg',
+        'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
+    }
+]
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'en-US'
+
+
 
 TEMPLATES = [
     {

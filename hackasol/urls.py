@@ -23,7 +23,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('drives/', include('organizers.urls')),
+    
     path('', include('clientpage.urls')),
+    url('', include('pwa.urls')),
 ]
 
 if settings.DEBUG:
