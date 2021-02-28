@@ -216,7 +216,7 @@ var app = new Vue({
                     <p>[[ inf.driveinfo.name ]]</p>
                     <p>[[ inf.driveinfo.address ]]</p>
                     <p class="w3-large w3-tag w3-red"><i>[[ inf.distance ]] kms</i></p>
-                                        <a class="w3-button w3-grey">Visit</a>
+                                        <a :href="[[ inf.url ]]" class="w3-button w3-grey">Visit</a>
 
                 </div><br>
             </div>

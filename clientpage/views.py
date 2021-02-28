@@ -8,6 +8,13 @@ from rest_framework.response import Response
 from clientpage.serializers import DriveSerializer
 from clientpage.forms import * 
 from django.contrib import messages
+import tensorflow as tf 
+from tensorflow.keras.optimizers import Adam
+import numpy as np
+import cv2
+import os
+from PIL import Image
+        
 
 from geopy.distance import geodesic
 
@@ -48,8 +55,9 @@ def locations(request,*args,**kwargs):
     for i in range(len(s_d)):
         li = {}
         drivedata = DonationDrives.objects.get(name=s_d[i][0])
+        url = drivedata.get_absolute_url()
         serializer = DriveSerializer(drivedata, many=False)
-        li.update({"driveinfo": serializer.data, "distance": s_d[i][1]})
+        li.update({"driveinfo": serializer.data, "distance": s_d[i][1],'url': url})
         context.append(li)
 
     return Response({"message":"success", "data": context})
@@ -84,3 +92,37 @@ def appointmentview(request,id):
             return render(request,'clientpage/profile.html',context)
 
     return render(request,'clientpage/appointment.html',context)
+
+INIT_LR = 1e-3
+EPOCHS = 25
+location = str(os.getcwd())+'\clientpage\model.h5'
+print(location)
+model = tf.keras.models.load_model(location)
+opt = Adam(lr=INIT_LR, decay=INIT_LR / EPOCHS)
+model.compile(loss="binary_crossentropy", optimizer=opt,
+	metrics=["accuracy"])
+
+
+def covid_detect(request):
+    if request.method == "POST":
+        print(request.POST)
+        img = Image.open(request.FILES['image']).convert('RGB') 
+        open_cv_image = np.array(img)
+        image = open_cv_image[:, :, ::-1].copy()
+        imageCpy = cv2.resize(image, (224, 224))
+
+        images = [imageCpy]
+        data =  np.stack(images, axis=0)
+
+        print(data.shape)
+
+        LABEL = ["covid-positive", "covid-negetive"]
+
+        pred =  model.predict(data)
+        label = LABEL[pred.argmax()]
+        context={
+            'pred': label,    
+        }
+        messages.success(request,'Inference Complete: '+ label + 'detected')
+        return render(request,'clientpage/detectpage.html',context)
+    return render(request,'clientpage/covid.html')

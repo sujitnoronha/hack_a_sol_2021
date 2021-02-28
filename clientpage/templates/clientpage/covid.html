@@ -1,0 +1,15 @@
+{% extends 'clientpage/base.html' %}
+{% block content %}
+    <div class="w3-container w3-padding-64">
+    <p class="w3-xxlarge">Ai based Covid Detector</p>
+        <form class="w3-form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+                    <div class="w3-section">
+         <label for="img">Select image:</label>
+          <input type="file" id="img" name="image" accept="image/*">
+        </div>
+        <input type="submit" class="w3-button w3-grey">
+
+        </form>
+    </div>
+{% endblock %}
