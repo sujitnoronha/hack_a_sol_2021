@@ -1,11 +1,11 @@
 {% extends 'clientpage/base.html' %}
 {% block content %}
     <div class="w3-content w3-padding-32" style="max-width:700px;margin-top:64px;">
-        <h1 class="w3-xlarge">Complete the application to register your Donation Drive </h1>
+        <h1 class="w3-xlarge">Complete the application to register your COVID-19 vaccination </h1>
         <p class='w3-small'>Will be verified in a day or two.</p>
         <form class="w3-form" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <input class="w3-input" placeholder="Name of Blood donation drive" type="text" name="name"><br>
+        <input class="w3-input" placeholder="Name of COVID-19 checkup centre" type="text" name="name"><br>
         
         <input class="w3-input" placeholder="Phonenumber" type="text" name="phonenumber"><br>
         <div class="w3-section">

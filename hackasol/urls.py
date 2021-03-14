@@ -25,7 +25,7 @@ urlpatterns = [
     path('drives/', include('organizers.urls')),
     
     path('', include('clientpage.urls')),
-    url('', include('pwa.urls')),
+    path('', include('pwa.urls')),
 ]
 
 if settings.DEBUG:
